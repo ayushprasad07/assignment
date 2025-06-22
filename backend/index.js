@@ -6,7 +6,11 @@ connectToMongo();
 const app = express()
 const port = 4000;
 
-app.use(cors());
+app.use(cors({
+  origin: "https://assignment-ayush-s-projects-e80e0aba.vercel.app/", // your frontend URL
+  credentials: true // if you're using cookies/auth headers
+}));
+
 app.use(express.json());
 
 app.use('/api/v1/user',require('./routes/user'));

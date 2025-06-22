@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { toast } from "react-toastify";
 
-
 const User = () => {
   const [items, setItem] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -22,25 +21,25 @@ const User = () => {
     }
   };
 
-  const onEnquireClick = async(itemId)=>{
+  const onEnquireClick = async (itemId) => {
     try {
-      const URL = `http://localhost:4000/api/v1/user/enquire/${itemId}`;
-      const response  = await fetch(URL,{
-        method:"GET",
-        headers:{
-          "auth-token":localStorage.getItem('token'),
+      const URL = `https://assignment-1-6jv4.onrender.com/api/v1/user/enquire/${itemId}`;
+      const response = await fetch(URL, {
+        method: "GET",
+        headers: {
+          "auth-token": localStorage.getItem('token'),
         }
-      })
+      });
       const data = await response.json();
-      if(response.ok){
+      if (response.ok) {
         toast.success(data.message);
-      }else{
+      } else {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const handleAddItemSubmit = async (e) => {
     e.preventDefault();
@@ -55,7 +54,7 @@ const User = () => {
         formData.append('additionalImage', file);
       });
 
-      const URL = "http://localhost:4000/api/v1/user/add-item";
+      const URL = "https://assignment-1-6jv4.onrender.com/api/v1/user/add-item";
       const response = await fetch(URL, {
         method: "POST",
         headers: {
@@ -71,7 +70,7 @@ const User = () => {
         setCoverImage(null);
         setAdditionalImage([]);
         getItems();
-        const modalInstance = Modal.getInstance(addModalRef.current);
+        const modalInstance = bootstrap.Modal.getInstance(addModalRef.current);
         if (modalInstance) modalInstance.hide();
       } else {
         toast.error(data.message);
@@ -84,14 +83,14 @@ const User = () => {
   const handleCardClick = (item) => {
     setSelectedItem(item);
     setTimeout(() => {
-      const modal = new Modal(itemModalRef.current);
+      const modal = new bootstrap.Modal(itemModalRef.current);
       modal.show();
     }, 100);
   };
 
   const getItems = async () => {
     try {
-      const URL = "http://localhost:4000/api/v1/user/get-items";
+      const URL = "https://assignment-1-6jv4.onrender.com/api/v1/user/get-items";
       const response = await fetch(URL, {
         method: "GET",
         headers: {
@@ -157,7 +156,7 @@ const User = () => {
                       </>
                     )}
                   </div>
-                  <div className="card-body" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={()=>{handleCardClick}}>
+                  <div className="card-body">
                     <h5 className="card-title">{item.name}</h5>
                     <p className="text-muted">{item.type}</p>
                     <p className="card-text">{item.description}</p>
@@ -169,6 +168,7 @@ const User = () => {
         </div>
       </div>
 
+      {/* Item Detail Modal */}
       <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" ref={itemModalRef}>
         <div className="modal-dialog modal-lg">
           <div className="modal-content">
@@ -221,7 +221,7 @@ const User = () => {
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" className="btn btn-primary" onClick={()=>{onEnquireClick(selectedItem._id)}}>Enquire</button>
+                  <button type="button" className="btn btn-primary" onClick={() => { onEnquireClick(selectedItem._id) }}>Enquire</button>
                 </div>
               </>
             )}
@@ -229,6 +229,7 @@ const User = () => {
         </div>
       </div>
 
+      {/* Add Item Modal */}
       <div className="modal fade" id="exampleModal1" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" ref={addModalRef}>
         <div className="modal-dialog modal-lg">
           <div className="modal-content">
@@ -240,15 +241,15 @@ const User = () => {
               <form onSubmit={handleAddItemSubmit}>
                 <div className="mb-3">
                   <label htmlFor="name" className="form-label">Item name:</label>
-                  <input type="text" className="form-control" id="name" name='name' onChange={handleAddItemChange} />
+                  <input type="text" className="form-control" id="name" name='name' onChange={handleAddItemChange} required />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="type" className="form-label">Item Type:</label>
-                  <input type="text" className="form-control" id="type" name='type' onChange={handleAddItemChange} />
+                  <input type="text" className="form-control" id="type" name='type' onChange={handleAddItemChange} required />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="description" className="form-label">Item Description:</label>
-                  <input type="text" className="form-control" id="description" name='description' onChange={handleAddItemChange} />
+                  <input type="text" className="form-control" id="description" name='description' onChange={handleAddItemChange} required />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="itemImage" className="form-label">Cover Image (Required):</label>
